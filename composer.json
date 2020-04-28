@@ -1,0 +1,13 @@
+{
+    "name": "laurel/multi-route",
+    "description": "Simple routing for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "prokhorenko-vladyslav",
+            "email": "random.person.1907@gmail.com"
+        }
+    ],
+    "require": {}
+}
