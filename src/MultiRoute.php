@@ -30,4 +30,14 @@ class MultiRoute
     {
 
     }
+
+    public static function isParentRecursive()
+    {
+
+    }
+
+    public static function isChildRecursive()
+    {
+
+    }
 }
