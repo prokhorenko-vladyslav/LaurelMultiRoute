@@ -1,6 +1,6 @@
 <?php
 
-namespace Laurel\MultiRoute\Models;
+namespace Laurel\MultiRoute\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

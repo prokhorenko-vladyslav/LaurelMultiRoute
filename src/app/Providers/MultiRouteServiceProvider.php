@@ -1,8 +1,7 @@
 <?php
 
-namespace Laurel\MultiRoute\Providers;
+namespace Laurel\MultiRoute\App\Providers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Laurel\MultiRoute\Models\Route;
 
@@ -25,6 +24,6 @@ class MultiRouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . "/../Database/migrations");
+        $this->loadMigrationsFrom(__DIR__ . "/../database/migrations");
     }
 }
