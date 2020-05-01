@@ -15,7 +15,7 @@ class CreateRouteTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
-            $table->string('slug');
+            $table->string('slug')->index();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->nullableMorphs('routable');
             $table->timestamps();
