@@ -3,8 +3,6 @@
 
 namespace Laurel\MultiRoute;
 
-
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -18,8 +16,7 @@ class MultiRoute
     public static function routes($methods = [])
     {
         if (empty($methods)) {
-            self::createRouteForMethod('any');
-            return;
+            $methods = config('multi-route.default_method');
         }
 
         if (!is_array($methods)) {
@@ -34,7 +31,7 @@ class MultiRoute
     public static function checkRouteMethod($method)
     {
         if (!in_array($method, config('multi-route.allowed_methods')))
-            throw new MethodNotAllowedException("Method {$method} is not allowed.");
+            throw new MethodNotAllowedException(config('multi-route.allowed_methods'), "Method {$method} is not allowed.");
     }
 
     public static function createRouteForMethod($method)

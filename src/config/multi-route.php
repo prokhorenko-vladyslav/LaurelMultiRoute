@@ -1,6 +1,7 @@
 <?php
     return [
+        'default_method' => 'any',
         'allowed_methods' => [
-            'get', 'post', 'put', 'patch', 'delete'
+            'any'
         ]
     ];
