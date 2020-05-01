@@ -11,7 +11,7 @@ class MultiRoute
 
     }
 
-    public static function route()
+    public static function routes()
     {
 
     }
