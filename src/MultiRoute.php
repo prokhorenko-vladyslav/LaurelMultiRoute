@@ -10,7 +10,7 @@ class MultiRoute
 {
     public static function handle()
     {
-        app()->call("App\Http\Controllers\TestController@index");
+        return app()->call("App\Http\Controllers\TestController@index");
     }
 
     public static function routes($methods = [])
