@@ -4,6 +4,7 @@
 namespace Laurel\MultiRoute;
 
 use Illuminate\Support\Facades\Route;
+use Laurel\MultiRoute\App\Models\Path;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class MultiRoute
@@ -30,8 +31,9 @@ class MultiRoute
 
     public static function checkRouteMethod($method)
     {
-        if (!in_array($method, config('multi-route.allowed_methods')))
+        if (!in_array($method, config('multi-route.allowed_methods'))) {
             throw new MethodNotAllowedException(config('multi-route.allowed_methods'), "Method {$method} is not allowed.");
+        }
     }
 
     public static function createRouteForMethod($method)
@@ -64,5 +66,36 @@ class MultiRoute
     public static function isChildRecursive()
     {
 
+    }
+
+    public static function addPath(string $slug, string $callback, Path $parent = null)
+    {
+        self::checkCallback($callback);
+        $path = new Path([
+            'slug' => $slug,
+            'callback' => $callback
+        ]);
+        ddd($slug, $callback, $parent);
+    }
+
+    public static function checkCallback(string $callback)
+    {
+        $parts = explode("@", $callback);
+        if (count($parts) !== 2) {
+            self::throwIncorrectCallbackException();
+        }
+        $controller = $parts[0];
+        $method = $parts[1];
+
+        if (!class_exists($controller) || !method_exists($controller, $method)) {
+            self::throwIncorrectCallbackException();
+        }
+
+        return true;
+    }
+
+    private static function throwIncorrectCallbackException()
+    {
+        throw new \Exception('Path callback is incorrect');
     }
 }
