@@ -75,7 +75,7 @@ class MultiRoute
             'slug' => $slug,
             'callback' => $callback
         ]);
-        ddd($slug, $callback, $parent);
+        ddd($path);
     }
 
     public static function checkCallback(string $callback)

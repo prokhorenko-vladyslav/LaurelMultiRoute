@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Path extends Model
 {
-    protected $fillable = ['slug'];
+    protected $fillable = ['slug', 'callback'];
 
     public function parent() : BelongsTo
     {
