@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRouteTable extends Migration
+class CreatePathTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateRouteTable extends Migration
      */
     public function up()
     {
-        Schema::create('routes', function (Blueprint $table) {
+        Schema::create('paths', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->index();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->nullableMorphs('routable');
+            $table->string('callback');
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('routes');
+            $table->foreign('parent_id')->references('id')->on('paths');
         });
     }
 

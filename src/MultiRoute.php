@@ -71,11 +71,17 @@ class MultiRoute
     public static function addPath(string $slug, string $callback, Path $parent = null)
     {
         self::checkCallback($callback);
+        self::checkSlugUnique($slug, $parent);
         $path = new Path([
             'slug' => $slug,
             'callback' => $callback
         ]);
-        ddd($path);
+
+        if (!is_null($parent)) {
+            $path->parent()->associate($parent);
+        }
+
+        return $path->save();
     }
 
     public static function checkCallback(string $callback)
@@ -97,5 +103,20 @@ class MultiRoute
     private static function throwIncorrectCallbackException()
     {
         throw new \Exception('Path callback is incorrect');
+    }
+
+    public static function checkSlugUnique(string $slug, Path $parent = null)
+    {
+        $exists = Path::where('slug', $slug)->where('parent_id', $parent->id ?? null)->exists();
+        if ($exists) {
+            self::throwPathAlreadyExistsException($slug);
+        }
+
+        return true;
+    }
+
+    private static function throwPathAlreadyExistsException(string $slug)
+    {
+        throw new \Exception("Path with slug `{$slug}` already exists");
     }
 }
