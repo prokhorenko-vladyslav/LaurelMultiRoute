@@ -29,6 +29,7 @@ class MultiRoute
         $parent = null;
         $pathChain = [];
         foreach ($uriParts as $slug) {
+            $slug = self::prepareSlug($slug);
             $path = Path::where('slug', $slug)->first();
             if (!$path) {
                 self::throwPathNotFoundException($slug);
@@ -43,6 +44,16 @@ class MultiRoute
         }
 
         return $pathChain;
+    }
+
+    public static function prepareSlug(string $slug)
+    {
+        if (config('multi-route.prepare_slug')) {
+            $slug = str_replace("%20", " ", $slug);
+            return preg_replace("/[\s]{2,}/", " ", $slug);
+        } else {
+            return $slug;
+        }
     }
 
     public static function throwPathNotFoundException(string $slug)
