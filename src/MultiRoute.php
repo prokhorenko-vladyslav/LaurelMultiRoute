@@ -11,7 +11,15 @@ class MultiRoute
 {
     public static function handle()
     {
+        $path = self::buildPathChain();
         return app()->call("App\Http\Controllers\TestController@index");
+    }
+
+    public static function buildPathChain(string $path = null)
+    {
+        $path = $path ?? request()->getRequestUri();
+        $uriElements = self::explodeUri($path);
+        dd($uriElements);
     }
 
     public static function routes($methods = [])
@@ -43,9 +51,29 @@ class MultiRoute
         });
     }
 
-    public static function path()
+    public static function path(string $path = null)
     {
 
+    }
+
+    public static function explodeUri(string $path)
+    {
+        $pathWithoutGetParams = explode("?", $path)[0];
+        $pathParts = explode("/", $pathWithoutGetParams);
+        return self::clearPathParts($pathParts);
+    }
+
+    public static function clearPathParts(array $pathParts)
+    {
+        $countOfParts = count($pathParts);
+        for ($i = 0; $i < $countOfParts; $i++) {
+            $pathParts[$i] = trim($pathParts[$i]);
+            if (!strlen($pathParts[$i])) {
+                unset($pathParts[$i]);
+            }
+        }
+
+        return array_values($pathParts);
     }
 
     public static function isParent()
