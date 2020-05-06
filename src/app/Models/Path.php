@@ -25,4 +25,9 @@ class Path extends Model
     {
         return $this->morphTo();
     }
+
+    public static function getBySlug($slug)
+    {
+        return Path::where('slug', $slug)->first();
+    }
 }

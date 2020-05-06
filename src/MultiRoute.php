@@ -33,7 +33,7 @@ class MultiRoute
         $pathChain = [];
         foreach ($uriParts as $slug) {
             $slug = self::prepareSlug($slug);
-            $path = Path::where('slug', $slug)->first();
+            $path = Path::getBySlug($slug);;
             if (!$path) {
                 self::throwPathNotFoundException($slug);
             }
@@ -98,9 +98,38 @@ class MultiRoute
         });
     }
 
-    public static function path(string $path = null)
+    public static function pathForSlug(string $slug)
     {
+        $pathChain = self::buildPathChainForSlug($slug);
+        $uri = "";
+        foreach ($pathChain as $path) {
+            $uri .= "/{$path->slug}";
+        }
+        return $uri;
+    }
 
+    public static function buildPathChainForSlug(string $slug)
+    {
+        $pathChain = [];
+        do {
+            $path = Path::getBySlug($slug);
+            if (!$path) {
+                self::throwPathNotFoundException($slug);
+            }
+
+            $pathChain[] = $path;
+            $parent = $path->load('parent')->parent;
+            if ($parent) {
+                $slug = $parent->slug;
+            }
+        } while ($parent !== null);
+
+        return array_reverse($pathChain);
+    }
+
+    public static function pathForId(int $id)
+    {
+        dd($id);
     }
 
     public static function explodeUri(string $path)
