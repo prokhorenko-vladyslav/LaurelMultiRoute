@@ -3,6 +3,7 @@
 
 namespace Laurel\MultiRoute;
 
+use Exception;
 use Illuminate\Support\Facades\Route;
 use Laurel\MultiRoute\App\Models\Path;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -12,14 +13,46 @@ class MultiRoute
     public static function handle()
     {
         $path = self::buildPathChain();
+        dd($path);
         return app()->call("App\Http\Controllers\TestController@index");
     }
 
     public static function buildPathChain(string $path = null)
     {
         $path = $path ?? request()->getRequestUri();
-        $uriElements = self::explodeUri($path);
-        dd($uriElements);
+        $uriParts = self::explodeUri($path);
+        return self::createPathChainFromUriParts($uriParts);
+    }
+
+    public static function createPathChainFromUriParts(array $uriParts)
+    {
+        $parent = null;
+        $pathChain = [];
+        foreach ($uriParts as $slug) {
+            $path = Path::where('slug', $slug)->first();
+            if (!$path) {
+                self::throwPathNotFoundException($slug);
+            }
+
+            if ($path->parent_id !== $parent) {
+                self::throwParentIsIncorrectException($path->id, $parent);
+            }
+
+            $parent = $path->id;
+            $pathChain[] = $path;
+        }
+
+        return $pathChain;
+    }
+
+    public static function throwPathNotFoundException(string $slug)
+    {
+        throw new Exception("Path with slug `{$slug}` has not been found");
+    }
+
+    public static function throwParentIsIncorrectException($childId, $parentId)
+    {
+        throw new Exception("Path with id `{$childId}` is not child of item with id `{$parentId}`");
     }
 
     public static function routes($methods = [])
@@ -130,7 +163,7 @@ class MultiRoute
 
     private static function throwIncorrectCallbackException()
     {
-        throw new \Exception('Path callback is incorrect');
+        throw new Exception('Path callback is incorrect');
     }
 
     public static function checkSlugUnique(string $slug, Path $parent = null)
@@ -145,6 +178,6 @@ class MultiRoute
 
     private static function throwPathAlreadyExistsException(string $slug)
     {
-        throw new \Exception("Path with slug `{$slug}` already exists");
+        throw new Exception("Path with slug `{$slug}` already exists");
     }
 }
