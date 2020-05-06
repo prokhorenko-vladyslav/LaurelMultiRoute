@@ -59,9 +59,9 @@ class MultiRoute
         }
     }
 
-    public static function throwPathNotFoundException(string $slug)
+    public static function throwPathNotFoundException(string $id)
     {
-        throw new Exception("Path with slug `{$slug}` has not been found");
+        throw new Exception("Path `{$id}` has not been found");
     }
 
     public static function throwParentIsIncorrectException($childId, $parentId)
@@ -101,11 +101,7 @@ class MultiRoute
     public static function pathForSlug(string $slug)
     {
         $pathChain = self::buildPathChainForSlug($slug);
-        $uri = "";
-        foreach ($pathChain as $path) {
-            $uri .= "/{$path->slug}";
-        }
-        return $uri;
+        return self::composePath($pathChain);
     }
 
     public static function buildPathChainForSlug(string $slug)
@@ -127,9 +123,38 @@ class MultiRoute
         return array_reverse($pathChain);
     }
 
+    public static function buildPathChainForId(int $id)
+    {
+        $pathChain = [];
+        do {
+            $path = Path::find($id);
+            if (!$path) {
+                self::throwPathNotFoundException($id);
+            }
+
+            $pathChain[] = $path;
+            $parent = $path->load('parent')->parent;
+            if ($parent) {
+                $id = $parent->id;
+            }
+        } while ($parent !== null);
+
+        return array_reverse($pathChain);
+    }
+
+    public static function composePath(array $pathChain)
+    {
+        $uri = "";
+        foreach ($pathChain as $path) {
+            $uri .= "/{$path->slug}";
+        }
+        return $uri;
+    }
+
     public static function pathForId(int $id)
     {
-        dd($id);
+        $pathChain = self::buildPathChainForId($id);
+        return self::composePath($pathChain);
     }
 
     public static function explodeUri(string $path)
