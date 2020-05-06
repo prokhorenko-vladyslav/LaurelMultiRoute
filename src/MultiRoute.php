@@ -6,6 +6,7 @@ namespace Laurel\MultiRoute;
 use Exception;
 use Illuminate\Support\Facades\Route;
 use Laurel\MultiRoute\App\Models\Path;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class MultiRoute
@@ -15,7 +16,7 @@ class MultiRoute
         if (config('multi-route.process_404')) {
             try {
                 return self::processRequest();
-            } catch (Exception $e) {
+            } catch (NotFoundHttpException $e) {
                 return app()->call(config('multi-route.not_found_controller'));
             }
         } else {
@@ -48,11 +49,11 @@ class MultiRoute
             $slug = self::prepareSlug($slug);
             $path = Path::getBySlug($slug);;
             if (!$path) {
-                self::throwPathNotFoundException($slug);
+                self::throw404Exception($slug);
             }
 
             if ($path->parent_id !== $parent) {
-                self::throwParentIsIncorrectException($path->id, $parent);
+                self::throw404Exception("Path with id `{$path->id}` is not child of item with id `{$parentId}`");
             }
 
             $parent = $path->id;
@@ -77,9 +78,9 @@ class MultiRoute
         throw new Exception("Path `{$id}` has not been found");
     }
 
-    public static function throwParentIsIncorrectException($childId, $parentId)
+    public static function throw404Exception(string $id)
     {
-        throw new Exception("Path with id `{$childId}` is not child of item with id `{$parentId}`");
+        throw new NotFoundHttpException("Path `{$id}` has not been found");
     }
 
     public static function routes($methods = [])
@@ -188,26 +189,6 @@ class MultiRoute
         }
 
         return array_values($pathParts);
-    }
-
-    public static function isParent()
-    {
-
-    }
-
-    public static function isChild()
-    {
-
-    }
-
-    public static function isParentRecursive()
-    {
-
-    }
-
-    public static function isChildRecursive()
-    {
-
     }
 
     public static function addPath(string $slug, string $callback, Path $parent = null)
