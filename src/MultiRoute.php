@@ -13,8 +13,11 @@ class MultiRoute
     public static function handle()
     {
         $path = self::buildPathChain();
-        dd($path);
-        return app()->call("App\Http\Controllers\TestController@index");
+        $callback = $path[count($path) - 1]->callback;
+        self::checkCallback($callback);
+        return app()->call($callback, [
+            'path' => $path
+        ]);
     }
 
     public static function buildPathChain(string $path = null)
