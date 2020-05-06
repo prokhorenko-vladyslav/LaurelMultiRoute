@@ -12,6 +12,19 @@ class MultiRoute
 {
     public static function handle()
     {
+        if (config('multi-route.process_404')) {
+            try {
+                return self::processRequest();
+            } catch (Exception $e) {
+                return app()->call(config('multi-route.not_found_controller'));
+            }
+        } else {
+            return self::processRequest();
+        }
+    }
+
+    public static function processRequest()
+    {
         $path = self::buildPathChain();
         $callback = $path[count($path) - 1]->callback;
         self::checkCallback($callback);
