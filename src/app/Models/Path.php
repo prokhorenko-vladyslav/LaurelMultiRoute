@@ -26,8 +26,18 @@ class Path extends Model
         return $this->morphTo();
     }
 
-    public static function getBySlug($slug)
+    public static function getBySlug($slug) : ?self
     {
         return Path::where('slug', $slug)->first();
+    }
+
+    public static function getById($id) : ?self
+    {
+        return Path::find($id);
+    }
+
+    public function setParentIdAttribute($parent_id)
+    {
+        dd($parent_id);
     }
 }
