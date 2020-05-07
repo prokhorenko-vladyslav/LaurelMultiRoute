@@ -5,8 +5,11 @@ namespace Laurel\MultiRoute\App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laurel\MultiRoute\App\Console\Commands\MultiRouteCache;
 use Laurel\MultiRoute\App\Console\Commands\MultiRouteClearCache;
-use Laurel\MultiRoute\Models\Route;
 
+/**
+ * Class MultiRouteServiceProvider
+ * @package Laurel\MultiRoute\App\Providers
+ */
 class MultiRouteServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +26,9 @@ class MultiRouteServiceProvider extends ServiceProvider
         ]);
     }
 
+    /**
+     *
+     */
     private function registerHelper()
     {
         $helperFilePath = __DIR__ . '/../Helpers/functions.php';

@@ -5,9 +5,21 @@ namespace Laurel\MultiRoute\App\Console\Commands;
 use Illuminate\Console\Command;
 use Laurel\MultiRoute\App\Models\Path;
 use Laurel\MultiRoute\MultiRoute;
+use Symfony\Component\Console\Helper\ProgressBar;
 
+/**
+ * Command for clear cache of paths
+ *
+ * Class MultiRouteClearCache
+ * @package Laurel\MultiRoute\App\Console\Commands
+ */
 class MultiRouteClearCache extends Command
 {
+    /**
+     * Variable, which contains instance of progress bar
+     *
+     * @var ProgressBar
+     */
     private $progressBar;
 
     /**
@@ -49,6 +61,9 @@ class MultiRouteClearCache extends Command
         $this->process();
     }
 
+    /**
+     * Gets quantity of all paths. After that loads chunks with 50 items and clear cache for each of them.
+     */
     private function process()
     {
         MultiRoute::clearCache();
