@@ -59,6 +59,23 @@ class Path extends Model
         $this->attributes["slug"] = $slug;
     }
 
+    public function activate()
+    {
+        $this->is_active = true;
+        $this->save();
+    }
+
+    public function deactivate()
+    {
+        $this->is_active = false;
+        $this->save();
+    }
+
+    public function setIsActiveAttribute(bool $status)
+    {
+        $this->attributes['is_active'] = $status;
+    }
+
     public function checkRecursiveForId(?int $parentId) : bool
     {
         if ($this->id === $parentId) {
