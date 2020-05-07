@@ -9,8 +9,5 @@
             "email": "random.person.1907@gmail.com"
         }
     ],
-    "require": {},
-    "autoload": {
-        "files" : "src/app/Helpers/functions.php"
-    }
+    "require": {}
 }
