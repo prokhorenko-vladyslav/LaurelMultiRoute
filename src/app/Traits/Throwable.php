@@ -2,6 +2,9 @@
 
 namespace Laurel\MultiRoute\App\Traits;
 
+use Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Trait Throwable
  * @package Laurel\MultiRoute\App\Traits
@@ -10,6 +13,7 @@ trait Throwable
 {
     /**
      * @param string $id
+     * @throws Exception
      */
     protected static function throwPathNotFoundException(string $id)
     {
@@ -18,6 +22,7 @@ trait Throwable
 
     /**
      * @param string $id
+     * @throws NotFoundHttpException
      */
     protected static function throw404Exception(string $id)
     {
@@ -26,6 +31,7 @@ trait Throwable
 
     /**
      *
+     * @throws Exception
      */
     protected static function throwIncorrectCallbackException()
     {
@@ -34,6 +40,7 @@ trait Throwable
 
     /**
      * @param string $slug
+     * @throws Exception
      */
     protected static function throwPathAlreadyExistsException(string $slug)
     {

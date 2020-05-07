@@ -3,6 +3,7 @@
 
 namespace Laurel\MultiRoute;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Laurel\MultiRoute\App\Traits\Cachable;
 use Laurel\MultiRoute\App\Traits\Chainable;
@@ -21,6 +22,7 @@ class MultiRoute
 
     /**
      * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public static function handle()
     {
@@ -46,7 +48,7 @@ class MultiRoute
         if (self::getCacheStorage()->has(request()->getRequestUri()) && config('multi-route.use_cache')) {
             try {
                 [$callback, $path] = self::getPathAttributesFromCache();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e->getMessage(), [ 'uri' => request()->getRequestUri() ]);
             }
         }
@@ -63,6 +65,7 @@ class MultiRoute
     /**
      * @param string $callback
      * @return bool
+     * @throws Exception
      */
     public static function checkCallback(string $callback)
     {

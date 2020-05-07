@@ -6,8 +6,15 @@ namespace Laurel\MultiRoute\App\Traits;
 
 use Laurel\MultiRoute\App\Models\Path;
 
+/**
+ * Trait Pathable
+ * @package Laurel\MultiRoute\App\Traits
+ */
 trait Pathable
 {
+    /**
+     * @return array
+     */
     public static function getPathAttributesFromDB()
     {
         $path = self::buildPathChain();
@@ -20,18 +27,32 @@ trait Pathable
         return [$callback, $path];
     }
 
+    /**
+     * @param string $slug
+     * @return mixed
+     */
     public static function pathForSlug(string $slug)
     {
         $pathChain = self::buildPathChainForSlug($slug);
         return self::composePath($pathChain);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public static function pathForId(int $id)
     {
         $pathChain = self::buildPathChainForId($id);
         return self::composePath($pathChain);
     }
 
+    /**
+     * @param string $slug
+     * @param string $callback
+     * @param Path|null $parent
+     * @return bool
+     */
     public static function addPath(string $slug, string $callback, Path $parent = null)
     {
         self::checkCallback($callback);
@@ -48,6 +69,11 @@ trait Pathable
         return $path->save();
     }
 
+    /**
+     * @param string $slug
+     * @param Path|null $parent
+     * @return bool
+     */
     public static function checkSlugUnique(string $slug, Path $parent = null)
     {
         $exists = Path::where('slug', $slug)->where('parent_id', $parent->id ?? null)->exists();
@@ -58,6 +84,9 @@ trait Pathable
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     public static function getHomepage()
     {
         return Path::whereNull('slug')->first();
