@@ -33,9 +33,19 @@ class Path extends Model
         return Path::where('slug', $slug)->first();
     }
 
+    public static function getBySlugOrFail($slug) : ?self
+    {
+        return Path::where('slug', $slug)->firstOrFail();
+    }
+
     public static function getById($id) : ?self
     {
         return Path::find($id);
+    }
+
+    public static function getByIdOrFail($id) : ?self
+    {
+        return Path::findOrFail($id);
     }
 
     public function setParentIdAttribute(?int $parentId)
