@@ -57,14 +57,14 @@ trait Cachable
     /**
      * @param string $cacheKey
      */
-    public static function removeFromCache(string $cacheKey)
+    public static function removeFromCache(string $uri)
     {
         try {
             if (config('multi-route.use_cache', false)) {
-                self::getCacheStorage()->pull(request()->getRequestUri());
+                self::getCacheStorage()->pull($uri);
             }
         } catch (\Exception $e) {
-            Log::error("Path `{$cacheKey}` has not been deleted from cache. " . $e->getMessage());
+            Log::error("Path `{$uri}` has not been deleted from cache. " . $e->getMessage());
         }
     }
 }
