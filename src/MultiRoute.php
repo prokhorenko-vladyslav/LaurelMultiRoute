@@ -62,7 +62,7 @@ class MultiRoute
     public static function getPathAttributesFromDB()
     {
         $path = self::buildPathChain();
-        if (!isset($path[count($path) - 1])) {
+        if (empty($path)) {
             self::throw404Exception(request()->getRequestUri());
         }
         $callback = $path[count($path) - 1]->callback;
@@ -125,6 +125,10 @@ class MultiRoute
 
             $parent = $path->id;
             $pathChain[] = $path;
+        }
+
+        if (!$pathChain && $homepage = self::getHomepage()) {
+            $pathChain[] = $homepage;
         }
 
         return $pathChain;
