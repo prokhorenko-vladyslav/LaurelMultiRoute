@@ -5,6 +5,7 @@ namespace Laurel\MultiRoute\App\Traits;
 
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait Cachable
@@ -12,12 +13,14 @@ use Illuminate\Support\Facades\Cache;
  */
 trait Cachable
 {
+    protected static $tag = 'laurel/multi-route';
+
     /**
      * @return Repository
      */
     protected static function getCacheStorage() : Repository
     {
-        return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')));
+        return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')))->tags([ config('multi-route.cache_prefix', '') ]);
     }
 
     /**
@@ -66,5 +69,10 @@ trait Cachable
         } catch (\Exception $e) {
             Log::error("Path `{$uri}` has not been deleted from cache. " . $e->getMessage());
         }
+    }
+
+    public static function clearCache()
+    {
+        return self::getCacheStorage()->flush();
     }
 }

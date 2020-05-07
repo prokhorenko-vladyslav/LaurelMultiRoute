@@ -4,6 +4,7 @@ namespace Laurel\MultiRoute\App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Laurel\MultiRoute\App\Models\Path;
+use Laurel\MultiRoute\MultiRoute;
 
 class MultiRouteClearCache extends Command
 {
@@ -50,18 +51,7 @@ class MultiRouteClearCache extends Command
 
     private function process()
     {
-        $pathsCount = Path::count();
-        $this->progressBar = $this->getOutput()->createProgressBar($pathsCount);
-        $this->progressBar->start();
-
-        Path::chunk(50, function($paths) {
-            foreach ($paths as $path) {
-                $path->removeFromCache();
-                $this->progressBar->advance();
-            }
-        });
-
-        $this->progressBar->finish();
+        MultiRoute::clearCache();
         $this->info("\nCache has been cleared.");
     }
 }

@@ -13,6 +13,7 @@
         'use_cache' => true,
         'cache_storage' => env('CACHE_DRIVER'),
         'cache_lifetime' => 50,
+        'cache_prefix' => 'multi-route',
 
         // Change or not children, when parent are deleting
         'set_null_on_delete' => true,
