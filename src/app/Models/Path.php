@@ -71,6 +71,16 @@ class Path extends Model
         $this->save();
     }
 
+    public function deactivated()
+    {
+        return !$this->is_active;
+    }
+
+    public function activated()
+    {
+        return $this->is_active;
+    }
+
     public function setIsActiveAttribute(bool $status)
     {
         $this->attributes['is_active'] = $status;

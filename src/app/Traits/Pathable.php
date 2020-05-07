@@ -21,7 +21,12 @@ trait Pathable
         if (empty($path)) {
             self::throw404Exception(request()->getRequestUri());
         }
-        $callback = $path[count($path) - 1]->callback;
+        $currentPath = $path[count($path) - 1];
+        $callback = $currentPath->callback;
+        if ($currentPath->deactivated()) {
+            self::throwPathNotActiveException($currentPath->slug);
+        }
+
         self::checkCallback($callback);
         self::saveToCache($callback, $path);
         return [$callback, $path];

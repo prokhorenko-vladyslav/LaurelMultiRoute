@@ -15,7 +15,7 @@ trait Throwable
      * @param string $id
      * @throws Exception
      */
-    protected static function throwPathNotFoundException(string $id)
+    protected static function throwPathNotFoundException(?string $id)
     {
         throw new Exception("Path `{$id}` has not been found");
     }
@@ -24,9 +24,18 @@ trait Throwable
      * @param string $id
      * @throws NotFoundHttpException
      */
-    protected static function throw404Exception(string $id)
+    protected static function throw404Exception(?string $id)
     {
         throw new NotFoundHttpException("Path `{$id}` has not been found");
+    }
+
+    /**
+     * @param string $id
+     * @throws NotFoundHttpException
+     */
+    protected static function throwPathNotActiveException(?string $id)
+    {
+        throw new NotFoundHttpException("Path `{$id}` is not active");
     }
 
     /**
@@ -42,7 +51,7 @@ trait Throwable
      * @param string $slug
      * @throws Exception
      */
-    protected static function throwPathAlreadyExistsException(string $slug)
+    protected static function throwPathAlreadyExistsException(?string $slug)
     {
         throw new Exception("Path with slug `{$slug}` already exists");
     }
