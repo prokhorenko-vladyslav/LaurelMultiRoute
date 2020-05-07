@@ -3,6 +3,7 @@
 namespace Laurel\MultiRoute\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laurel\MultiRoute\App\Console\Commands\MultiRouteCache;
 use Laurel\MultiRoute\Models\Route;
 
 class MultiRouteServiceProvider extends ServiceProvider
@@ -15,6 +16,9 @@ class MultiRouteServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerHelper();
+        $this->commands([
+            MultiRouteCache::class
+        ]);
     }
 
     private function registerHelper()

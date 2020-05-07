@@ -11,7 +11,7 @@ trait HasCache
     public function removeFromCache()
     {
         if (config('multi-route.use_cache', false)) {
-            $uri = MultiRoute::pathForId($this->id);
+            $uri = MultiRoute::uriForId($this->id);
             MultiRoute::removeFromCache($uri);
         }
     }
@@ -19,8 +19,9 @@ trait HasCache
     public function saveToCache()
     {
         if (config('multi-route.use_cache', false)) {
-            $uri = MultiRoute::pathForId($this->id);
-            MultiRoute::saveToCache($this->callback, $uri);
+            $uri = MultiRoute::uriForId($this->id);
+            $path = MultiRoute::pathForId($this->id);
+            MultiRoute::saveToCache($uri, $this->callback, $path);
         }
     }
 }

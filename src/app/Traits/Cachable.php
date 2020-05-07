@@ -31,18 +31,19 @@ trait Cachable
     }
 
     /**
+     * @param string $uri
      * @param string $callback
      * @param $path
      */
-    public static function saveToCache(string $callback, $path)
+    public static function saveToCache(string $uri, string $callback, $path)
     {
         try {
             if (config('multi-route.use_cache', false)) {
-                self::getCacheStorage()->put(request()->getRequestUri(), [
+                self::getCacheStorage()->put($uri, [
                     'path' => $path,
                     'callback' => $callback,
                 ], now()->addMinutes(
-                    floatval(config('multi-route.cache_lifetime', 1)))
+                    floatval(config('multi-route.cache_lifetime', 10)))
                 );
             }
         } catch (\Exception $e) {

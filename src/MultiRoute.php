@@ -6,7 +6,6 @@ namespace Laurel\MultiRoute;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Laurel\MultiRoute\App\Traits\Cachable;
-use Laurel\MultiRoute\App\Traits\Chainable;
 use Laurel\MultiRoute\App\Traits\Pathable;
 use Laurel\MultiRoute\App\Traits\Routable;
 use Laurel\MultiRoute\App\Traits\Throwable;
@@ -18,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class MultiRoute
 {
-    use Throwable, Cachable, Routable, Chainable, Pathable;
+    use Throwable, Cachable, Routable, Pathable;
 
     /**
      * @return mixed
