@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Log;
  */
 trait Cachable
 {
-    protected static $tag = 'laurel/multi-route';
-
     /**
      * @return Repository
      */
@@ -58,7 +56,7 @@ trait Cachable
     }
 
     /**
-     * @param string $cacheKey
+     * @param string $uri
      */
     public static function removeFromCache(string $uri)
     {
