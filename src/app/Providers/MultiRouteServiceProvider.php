@@ -14,7 +14,15 @@ class MultiRouteServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerHelper();
+    }
+
+    private function registerHelper()
+    {
+        $helperFilePath = __DIR__ . '/../Helpers/functions.php';
+        if (file_exists($helperFilePath)) {
+            require_once($helperFilePath);
+        }
     }
 
     /**
