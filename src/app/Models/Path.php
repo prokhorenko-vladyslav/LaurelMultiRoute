@@ -47,7 +47,7 @@ class Path extends Model
     public function checkRecursiveForId(?int $parentId) : bool
     {
         if ($this->id === $parentId) {
-            throw new RouteRecursionException("Element can not be self parent");
+            throw new RouteRecursionException("Element can not for self parent");
         }
         return $this->checkRecursive($this, $parentId);
     }
