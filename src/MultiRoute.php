@@ -4,6 +4,9 @@
 namespace Laurel\MultiRoute;
 
 use Exception;
+use Illuminate\Cache\Repository;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Laurel\MultiRoute\App\Models\Path;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,12 +29,58 @@ class MultiRoute
 
     public static function processRequest()
     {
-        $path = self::buildPathChain();
-        $callback = $path[count($path) - 1]->callback;
-        self::checkCallback($callback);
+        $callback = false;
+        $path = false;
+        $cacheStorage = Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')));
+        if ($cacheStorage->has(request()->getRequestUri()) && config('multi-route.use_cache')) {
+            try {
+                [$callback, $path] = self::getPathAttributesFromCache($cacheStorage);
+            } catch (\Exception $e) {
+                Log::error($e->getMessage(), [ 'uri' => request()->getRequestUri() ]);
+            }
+        }
+
+        if (!$callback || !$path) {
+            [$callback, $path] = self::getPathAttributesFromDB();
+        }
+
         return app()->call($callback, [
             'path' => $path
         ]);
+    }
+
+    public static function getPathAttributesFromCache(Repository $cacheStorage)
+    {
+        $attributes = $cacheStorage->get(request()->getRequestUri());
+        return [$attributes['callback'], $attributes['path']];
+    }
+
+    public static function getPathAttributesFromDB()
+    {
+        $path = self::buildPathChain();
+        $callback = $path[count($path) - 1]->callback;
+        self::checkCallback($callback);
+        self::saveToCache($callback, $path);
+        return [$callback, $path];
+    }
+
+    public static function saveToCache(string $callback, $path)
+    {
+        try {
+            if (config('multi-route.use_cache', false)) {
+                Cache::put(request()->getRequestUri(), [
+                    'path' => $path,
+                    'callback' => $callback,
+                ], now()->addMinutes(
+                    floatval(config('multi-route.cache_lifetime', 1)))
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error("Path has not been cached. " . $e->getMessage(), [
+                'callback' => $callback,
+                'path' => $path
+            ]);
+        }
     }
 
     public static function buildPathChain(string $path = null)
@@ -53,7 +102,7 @@ class MultiRoute
             }
 
             if ($path->parent_id !== $parent) {
-                self::throw404Exception("Path with id `{$path->id}` is not child of item with id `{$parentId}`");
+                self::throw404Exception("Path with id `{$path->id}` is not child of item with id `{$parent}`");
             }
 
             $parent = $path->id;

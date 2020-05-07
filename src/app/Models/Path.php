@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Laurel\MultiRoute\app\Exceptions\RouteRecursionException;
 
 class Path extends Model
 {
@@ -36,8 +37,29 @@ class Path extends Model
         return Path::find($id);
     }
 
-    public function setParentIdAttribute($parent_id)
+    public function setParentIdAttribute(int $parentId)
     {
-        dd($parent_id);
+        $this->checkRecursiveForId($parentId);
+        $this->attributes["parent_id"] = $parentId;
+    }
+
+    public function checkRecursiveForId(int $parentId) : bool
+    {
+        return $this->checkRecursive($this, $parentId);
+    }
+
+    public function checkRecursive(Path $item, int $searchId)
+    {
+        foreach ($item->load('children')->children as $child) {
+            if ($child->id === $searchId) {
+                throw new RouteRecursionException("Founded recursive for {$child->slug}[{$child->id}] and {$this->slug}[{$this->id}]");
+            }
+
+            if ($child->children()->count()) {
+                $this->checkRecursive($child, $searchId);
+            }
+        }
+
+        return true;
     }
 }
