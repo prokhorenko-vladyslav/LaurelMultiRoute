@@ -4,7 +4,7 @@
 namespace Laurel\MultiRoute;
 
 use Exception;
-use Illuminate\Cache\Repository;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -27,14 +27,18 @@ class MultiRoute
         }
     }
 
+    protected static function getCacheStorage() : Repository
+    {
+        return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')));
+    }
+
     public static function processRequest()
     {
         $callback = false;
         $path = false;
-        $cacheStorage = Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')));
-        if ($cacheStorage->has(request()->getRequestUri()) && config('multi-route.use_cache')) {
+        if (self::getCacheStorage()->has(request()->getRequestUri()) && config('multi-route.use_cache')) {
             try {
-                [$callback, $path] = self::getPathAttributesFromCache($cacheStorage);
+                [$callback, $path] = self::getPathAttributesFromCache();
             } catch (\Exception $e) {
                 Log::error($e->getMessage(), [ 'uri' => request()->getRequestUri() ]);
             }
@@ -49,9 +53,9 @@ class MultiRoute
         ]);
     }
 
-    public static function getPathAttributesFromCache(Repository $cacheStorage)
+    public static function getPathAttributesFromCache()
     {
-        $attributes = $cacheStorage->get(request()->getRequestUri());
+        $attributes = self::getCacheStorage()->get(request()->getRequestUri());
         return [$attributes['callback'], $attributes['path']];
     }
 
@@ -68,7 +72,7 @@ class MultiRoute
     {
         try {
             if (config('multi-route.use_cache', false)) {
-                Cache::put(request()->getRequestUri(), [
+                self::getCacheStorage()->put(request()->getRequestUri(), [
                     'path' => $path,
                     'callback' => $callback,
                 ], now()->addMinutes(
@@ -80,6 +84,17 @@ class MultiRoute
                 'callback' => $callback,
                 'path' => $path
             ]);
+        }
+    }
+
+    public static function removeFromCache(string $cacheKey)
+    {
+        try {
+            if (config('multi-route.use_cache', false)) {
+                self::getCacheStorage()->pull(request()->getRequestUri());
+            }
+        } catch (\Exception $e) {
+            Log::error("Path `{$cacheKey}` has not been deleted from cache. " . $e->getMessage());
         }
     }
 
