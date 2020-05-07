@@ -309,4 +309,9 @@ class MultiRoute
     {
         throw new Exception("Path with slug `{$slug}` already exists");
     }
+
+    public static function getHomepage()
+    {
+        return Path::whereNull('slug')->first();
+    }
 }
