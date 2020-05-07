@@ -16,4 +16,6 @@
 
         // Change or not children, when parent are deleting
         'set_null_on_delete' => true,
+
+        'is_path_active_after_adding' => true,
     ];
