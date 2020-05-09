@@ -8,12 +8,16 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
+ * Trait for manipulating paths caching
+ *
  * Trait Cachable
  * @package Laurel\MultiRoute\App\Traits
  */
 trait Cachable
 {
     /**
+     * Return cache storage with package tags
+     *
      * @return Repository
      */
     protected static function getCacheStorage() : Repository
@@ -22,6 +26,8 @@ trait Cachable
     }
 
     /**
+     * Returns cached path
+     *
      * @return array
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
@@ -32,9 +38,13 @@ trait Cachable
     }
 
     /**
+     * Saves path to the cache
+     *
      * @param string $uri
      * @param string $callback
      * @param $path
+     *
+     * @return void
      */
     public static function saveToCache(string $uri, string $callback, $path)
     {
@@ -56,7 +66,10 @@ trait Cachable
     }
 
     /**
+     * Removes path from the cache
+     *
      * @param string $uri
+     * @return void
      */
     public static function removeFromCache(string $uri)
     {
@@ -69,8 +82,13 @@ trait Cachable
         }
     }
 
+    /**
+     * Delete all paths from the cache storage
+     *
+     * @return bool
+     */
     public static function clearCache()
     {
-        return self::getCacheStorage()->flush();
+        return (bool)self::getCacheStorage()->flush();
     }
 }

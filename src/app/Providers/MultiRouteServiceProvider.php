@@ -7,6 +7,8 @@ use Laurel\MultiRoute\App\Console\Commands\MultiRouteCache;
 use Laurel\MultiRoute\App\Console\Commands\MultiRouteClearCache;
 
 /**
+ * Service provider for including commands, helpers, migrations and files with config.
+ *
  * Class MultiRouteServiceProvider
  * @package Laurel\MultiRoute\App\Providers
  */
@@ -26,8 +28,11 @@ class MultiRouteServiceProvider extends ServiceProvider
         ]);
     }
 
+
     /**
+     * Registering file with helper functions
      *
+     * @return void
      */
     private function registerHelper()
     {

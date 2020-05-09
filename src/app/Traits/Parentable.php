@@ -8,33 +8,70 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laurel\MultiRoute\app\Exceptions\RouteRecursionException;
 
+/**
+ * Trait for creating child-parent relationships
+ *
+ * Trait Parentable
+ * @package Laurel\MultiRoute\App\Traits
+ */
 trait Parentable
 {
+    /**
+     * Checks for recursion and sets parent_id, if all is ok
+     *
+     * @param int|null $parentId
+     * @throws RouteRecursionException
+     */
     public function setParentIdAttribute(?int $parentId)
     {
-        $this->checkRecursiveForId($parentId);
+        $this->checkRecursionForId($parentId);
         $this->attributes["parent_id"] = $parentId;
     }
 
+    /**
+     * Method for creating child-parent relationships
+     *
+     * @return BelongsTo
+     */
     public function parent() : BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    /**
+     * Method for creating parent-child relationships
+     *
+     * @return HasMany
+     */
     public function children() : HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function checkRecursiveForId(?int $parentId) : bool
+    /**
+     * Checks for recursion
+     *
+     * @param int|null $parentId
+     * @return bool
+     * @throws RouteRecursionException
+     */
+    public function checkRecursionForId(?int $parentId) : bool
     {
         if ($this->id === $parentId) {
             throw new RouteRecursionException("Element can not for self parent");
         }
-        return $this->checkRecursive($this, $parentId);
+        return $this->checkRecursion($this, $parentId);
     }
 
-    public function checkRecursive(self $item, ?int $searchId)
+    /**
+     * Gets all item children and checks it for equality to @searchId
+     *
+     * @param Parentable $item
+     * @param int|null $searchId
+     * @return bool
+     * @throws RouteRecursionException
+     */
+    public function checkRecursion(self $item, ?int $searchId)
     {
         if (is_null($searchId)) {
             foreach ($item->load('children')->children as $child) {
@@ -43,7 +80,7 @@ trait Parentable
                 }
 
                 if ($child->children()->count()) {
-                    $this->checkRecursive($child, $searchId);
+                    $this->checkRecursion($child, $searchId);
                 }
             }
         }
@@ -51,6 +88,11 @@ trait Parentable
         return true;
     }
 
+    /**
+     * If parameter "Set null on delete" is true, method gets all children and removes parent-child relationship
+     *
+     * @return void
+     */
     protected function changeChildrenParent()
     {
         if (config('multi-route.set_null_on_delete', false)) {

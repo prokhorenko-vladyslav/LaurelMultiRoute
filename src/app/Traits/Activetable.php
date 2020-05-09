@@ -5,13 +5,17 @@ namespace Laurel\MultiRoute\App\Traits;
 
 
 /**
+ * Trait, which change/return status of path.
+ *
  * Trait Activetable
  * @package Laurel\MultiRoute\App\Traits
  */
 trait Activetable
 {
     /**
+     * Activates path
      *
+     * @return void
      */
     public function activate()
     {
@@ -20,7 +24,9 @@ trait Activetable
     }
 
     /**
+     * Deactivates path
      *
+     * @return void
      */
     public function deactivate()
     {
@@ -29,6 +35,8 @@ trait Activetable
     }
 
     /**
+     * Returns true, if path is deactivated
+     *
      * @return bool
      */
     public function deactivated()
@@ -37,6 +45,8 @@ trait Activetable
     }
 
     /**
+     * Return true, if path is activated
+     *
      * @return mixed
      */
     public function activated()
@@ -45,6 +55,8 @@ trait Activetable
     }
 
     /**
+     * Changed status of the path
+     *
      * @param bool $status
      */
     public function setIsActiveAttribute(bool $status)
