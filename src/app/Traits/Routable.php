@@ -7,12 +7,16 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 /**
+ * Trait for adding package routes
+ *
  * Trait Routable
  * @package Laurel\MultiRoute\App\Traits
  */
 trait Routable
 {
     /**
+     * Method registers routes
+     *
      * @param array $methods
      */
     public static function routes($methods = [])
@@ -31,6 +35,8 @@ trait Routable
     }
 
     /**
+     * Checks request method
+     *
      * @param $method
      */
     public static function checkRouteMethod($method)
@@ -41,6 +47,8 @@ trait Routable
     }
 
     /**
+     * Creates route for method
+     *
      * @param $method
      */
     public static function createRouteForMethod($method)
