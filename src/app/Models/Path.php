@@ -24,7 +24,7 @@ class Path extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['slug', 'callback'];
+    protected $fillable = ['slug', 'callback', 'middleware'];
 
     /**
      * Returns path by id or null

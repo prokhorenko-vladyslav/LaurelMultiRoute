@@ -18,6 +18,7 @@ class CreatePathTable extends Migration
             $table->string('slug')->index()->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('callback');
+            $table->json('middleware');
             $table->boolean('is_active');
             $table->timestamps();
 
