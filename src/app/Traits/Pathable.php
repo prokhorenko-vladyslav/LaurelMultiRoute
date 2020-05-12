@@ -7,12 +7,16 @@ namespace Laurel\MultiRoute\App\Traits;
 use Laurel\MultiRoute\App\Models\Path;
 
 /**
+ * Trait for manipulating paths
+ *
  * Trait Pathable
  * @package Laurel\MultiRoute\App\Traits
  */
 trait Pathable
 {
     /**
+     * Gets path from database, checks its status and callback. If cache is active, path data will save to cache storage
+     *
      * @return array
      */
     public static function getPathAttributesFromDB()
@@ -33,6 +37,8 @@ trait Pathable
     }
 
     /**
+     * Gets path from database and creates uri for it using slug
+     *
      * @param string $slug
      * @return mixed
      */
@@ -43,6 +49,8 @@ trait Pathable
     }
 
     /**
+     * Gets path from database and creates uri for it using id
+     *
      * @param int $id
      * @return mixed
      */
@@ -53,6 +61,8 @@ trait Pathable
     }
 
     /**
+     * Creates new path and saves it to database
+     *
      * @param string $slug
      * @param string $callback
      * @param Path|null $parent
@@ -75,6 +85,8 @@ trait Pathable
     }
 
     /**
+     * Checks if slug is unique
+     *
      * @param string $slug
      * @param Path|null $parent
      * @return bool
@@ -90,6 +102,8 @@ trait Pathable
     }
 
     /**
+     * Returns homepage path
+     *
      * @return mixed
      */
     public static function getHomepage()
@@ -98,6 +112,8 @@ trait Pathable
     }
 
     /**
+     * Returns path chain
+     *
      * @param string|null $path
      * @return array
      */
@@ -109,6 +125,8 @@ trait Pathable
     }
 
     /**
+     * Creates path chain
+     *
      * @param array $uriParts
      * @return array
      */
@@ -139,6 +157,8 @@ trait Pathable
     }
 
     /**
+     * Creates parent chain for path using slug
+     *
      * @param string $slug
      * @return array
      */
@@ -162,6 +182,8 @@ trait Pathable
     }
 
     /**
+     * Creates parent chain for path using id
+     *
      * @param int $id
      * @return array
      */
@@ -185,6 +207,8 @@ trait Pathable
     }
 
     /**
+     * Composes path using path chain
+     *
      * @param array $pathChain
      * @return string
      */
@@ -198,6 +222,8 @@ trait Pathable
     }
 
     /**
+     * Explodes uri
+     *
      * @param string $path
      * @return array
      */
@@ -209,6 +235,8 @@ trait Pathable
     }
 
     /**
+     * Removes from path parts spaces
+     *
      * @param array $pathParts
      * @return array
      */
@@ -226,6 +254,8 @@ trait Pathable
     }
 
     /**
+     * Replaces %20 in the slug to space
+     *
      * @param string $slug
      * @return string|string[]|null
      */
