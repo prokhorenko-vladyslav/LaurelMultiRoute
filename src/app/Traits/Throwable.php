@@ -6,12 +6,16 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * Trait with package exceptions
+ *
  * Trait Throwable
  * @package Laurel\MultiRoute\App\Traits
  */
 trait Throwable
 {
     /**
+     * Exception, which will throw, when path has not been found
+     *
      * @param string $id
      * @throws Exception
      */
@@ -21,6 +25,8 @@ trait Throwable
     }
 
     /**
+     * Exception, which will throw, when callback for uri has not been found
+     *
      * @param string $id
      * @throws NotFoundHttpException
      */
@@ -30,6 +36,8 @@ trait Throwable
     }
 
     /**
+     * Exception, which will throw, when path is not active
+     *
      * @param string $id
      * @throws NotFoundHttpException
      */
@@ -39,6 +47,7 @@ trait Throwable
     }
 
     /**
+     * Exception, which will throw, when path callback is invalid
      *
      * @throws Exception
      */
@@ -48,6 +57,8 @@ trait Throwable
     }
 
     /**
+     * Exception, which will throw, when path with save slug already exists
+     *
      * @param string $slug
      * @throws Exception
      */
