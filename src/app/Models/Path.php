@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laurel\MultiRoute\App\Traits\Activetable;
 use Laurel\MultiRoute\App\Traits\CanBeHomepage;
 use Laurel\MultiRoute\App\Traits\HasCache;
+use Laurel\MultiRoute\App\Traits\HasMiddleware;
 use Laurel\MultiRoute\App\Traits\Parentable;
 use Laurel\MultiRoute\App\Traits\Sluggable;
 
@@ -19,7 +20,7 @@ use Laurel\MultiRoute\App\Traits\Sluggable;
  */
 class Path extends Model
 {
-    use Activetable, Parentable, HasCache, Sluggable, CanBeHomepage;
+    use Activetable, Parentable, HasCache, HasMiddleware, Sluggable, CanBeHomepage;
 
     /**
      * @var string[]
