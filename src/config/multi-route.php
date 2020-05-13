@@ -10,7 +10,7 @@
         'process_404' => true,
         'not_found_controller' => "\App\Http\Controllers\NotFoundController@not_found",
 
-        'use_cache' => true,
+        'use_cache' => false,
         'cache_storage' => env('CACHE_DRIVER'),
         'cache_lifetime' => 50,
         'cache_prefix' => 'laurel/multi-route',

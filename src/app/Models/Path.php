@@ -23,9 +23,20 @@ class Path extends Model
     use Activetable, Parentable, HasCache, HasMiddleware, Sluggable, CanBeHomepage;
 
     /**
+     * Fillable options
+     *
      * @var string[]
      */
-    protected $fillable = ['slug', 'callback', 'middleware'];
+    protected $fillable = ['slug', 'callback', 'middleware_list'];
+
+    /**
+     * Cast options
+     *
+     * @var string[]
+     */
+    protected $casts = [
+        "middleware" => "array"
+    ];
 
     /**
      * Returns path by id or null

@@ -5,10 +5,12 @@ namespace Laurel\MultiRoute;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Laurel\MultiRoute\App\Models\Path;
 use Laurel\MultiRoute\App\Traits\Cachable;
 use Laurel\MultiRoute\App\Traits\Pathable;
 use Laurel\MultiRoute\App\Traits\Routable;
 use Laurel\MultiRoute\App\Traits\Throwable;
+use PhpParser\Node\Expr\Closure;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -56,9 +58,36 @@ class MultiRoute
             [$callback, $path] = self::getPathAttributesFromDB();
         }
 
-        return app()->call($callback, [
-            'path' => $path
-        ]);
+        $currentPath = $path[count($path) - 1];
+        $result = self::callMiddleware($currentPath);
+        if ($result !== true) {
+            return $result;
+        } else {
+             return app()->call($callback, [
+                'path' => $path
+            ]);
+        }
+    }
+
+    /**
+     * Calls path middleware
+     *
+     * @param Path $path
+     * @return bool
+     */
+    public static function callMiddleware(Path $path)
+    {
+        foreach ($path->middleware() as $middleware) {
+            $result = app($middleware)->handle(request(), function() {
+                return true;
+            });
+
+            if ($result !== true) {
+                return $result;
+            }
+        }
+
+        return true;
     }
 
     /**
