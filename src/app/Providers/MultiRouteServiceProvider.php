@@ -51,5 +51,8 @@ class MultiRouteServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . "/../../database/migrations");
         $this->mergeConfigFrom(__DIR__ . "/../../config/multi-route.php", 'multi-route');
+        $this->publishes([
+            __DIR__ . "/../../config/multi-route.php" => config_path('/multi-route.php')
+        ], 'config');
     }
 }
