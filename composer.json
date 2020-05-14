@@ -16,5 +16,8 @@
             "Laurel\\MultiRoute\\App\\": "src/app"
         }
     },
-    "require": {}
+    "require": {
+        "php": "^7.2.5",
+        "laravel/framework": "^7.0"
+    }
 }
