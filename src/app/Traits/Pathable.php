@@ -119,7 +119,8 @@ trait Pathable
      */
     public static function buildPathChain(string $path = null)
     {
-        $path = $path ?? request()->getRequestUri();
+        $path = $path ?? request()->route('path');
+        $path = is_null($path) ? '' : $path;
         $uriParts = self::explodeUri($path);
         return self::createPathChainFromUriParts($uriParts);
     }
@@ -136,7 +137,7 @@ trait Pathable
         $pathChain = [];
         foreach ($uriParts as $slug) {
             $slug = self::prepareSlug($slug);
-            $path = Path::getBySlug($slug);;
+            $path = Path::getBySlug($slug, self::prefix());
             if (!$path) {
                 self::throw404Exception($slug);
             }

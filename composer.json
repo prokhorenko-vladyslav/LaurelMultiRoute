@@ -3,11 +3,18 @@
     "description": "Simple routing for Laravel",
     "type": "library",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "prokhorenko-vladyslav",
             "email": "random.person.1907@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Laurel\\MultiRoute\\": "src/",
+            "Laurel\\MultiRoute\\App\\": "src/app"
+        }
+    },
     "require": {}
 }

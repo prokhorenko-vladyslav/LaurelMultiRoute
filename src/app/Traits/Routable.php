@@ -15,11 +15,22 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 trait Routable
 {
     /**
+     * Returns prefix
+     *
+     * @return null
+     */
+    public static function prefix()
+    {
+        return substr(request()->route()->getPrefix(), 0, 1) === "/" ? substr(request()->route()->getPrefix(), 1, strlen(request()->route()->getPrefix())) : request()->route()->getPrefix();
+    }
+
+    /**
      * Method registers routes
      *
+     * @param null $prefix
      * @param array $methods
      */
-    public static function routes($methods = [])
+    public static function routes($prefix = null, $methods = [])
     {
         if (empty($methods)) {
             $methods = config('multi-route.default_method');
@@ -30,7 +41,7 @@ trait Routable
         }
         foreach ($methods as $method) {
             self::checkRouteMethod($method);
-            self::createRouteForMethod($method);
+            self::createRouteForMethod($prefix, $method);
         }
     }
 
@@ -50,10 +61,11 @@ trait Routable
      * Creates route for method
      *
      * @param $method
+     * @param null $prefix
      */
-    public static function createRouteForMethod($method)
+    public static function createRouteForMethod($prefix, $method)
     {
-        Route::namespace('\Laurel\MultiRoute')->group(function() use ($method) {
+        Route::namespace('\Laurel\MultiRoute')->prefix($prefix ?? '')->group(function() use ($method) {
             Route::$method('{path?}', 'MultiRoute@handle')->where('path', '.*')->name('multi-route.index');
         });
     }

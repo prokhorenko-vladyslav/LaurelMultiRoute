@@ -16,6 +16,8 @@ use Laurel\MultiRoute\app\Exceptions\RouteRecursionException;
  */
 trait Parentable
 {
+    use Throwable;
+
     /**
      * Checks for recursion and sets parent_id, if all is ok
      *
@@ -25,6 +27,10 @@ trait Parentable
     public function setParentIdAttribute(?int $parentId)
     {
         $this->checkRecursionForId($parentId);
+        if ($this->getPrefix() !== self::getByIdOrFail($parentId)->getPrefix()) {
+            self::throwIncorrectPrefixException();
+        }
+
         $this->attributes["parent_id"] = $parentId;
     }
 
@@ -58,7 +64,7 @@ trait Parentable
     public function checkRecursionForId(?int $parentId) : bool
     {
         if ($this->id === $parentId) {
-            throw new RouteRecursionException("Element can not for self parent");
+            throw new RouteRecursionException("Element can not be self parent");
         }
         return $this->checkRecursion($this, $parentId);
     }

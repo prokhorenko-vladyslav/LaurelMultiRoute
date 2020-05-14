@@ -78,9 +78,10 @@ class MultiRoute
     public static function callMiddleware(Path $path)
     {
         foreach ($path->middleware() as $middleware) {
-            $result = app($middleware)->handle(request(), function() {
-                return true;
-            });
+            if (is_null($middleware)) {
+                continue;
+            }
+            $result = app($middleware)->handle(request(), 1, '');
 
             if ($result !== true) {
                 return $result;

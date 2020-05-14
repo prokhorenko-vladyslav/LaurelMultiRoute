@@ -66,4 +66,9 @@ trait Throwable
     {
         throw new Exception("Path with slug `{$slug}` already exists");
     }
+
+    protected static function throwIncorrectPrefixException()
+    {
+        throw new Exception("Path and its parent has different prefix");
+    }
 }

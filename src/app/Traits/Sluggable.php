@@ -15,23 +15,27 @@ trait Sluggable
     /**
      * Gets path by slug
      *
-     * @param $slug
+     * @param string $slug
+     * @param string|null $prefix
      * @return static|null
      */
-    public static function getBySlug($slug) : ?self
+    public static function getBySlug(string $slug, string $prefix = null) : ?self
     {
-        return self::where('slug', $slug)->first();
+        $query = self::where('slug', $slug);
+        return empty($prefix) ? $query->whereNull('prefix')->first() : $query->where('prefix', $prefix)->first();
     }
 
     /**
      * Gets path by slug or fail, if it has not been found
      *
-     * @param $slug
+     * @param string $slug
+     * @param string|null $prefix
      * @return static|null
      */
-    public static function getBySlugOrFail($slug) : ?self
+    public static function getBySlugOrFail(string $slug, string $prefix = null) : ?self
     {
-        return self::where('slug', $slug)->firstOrFail();
+        $query = self::where('slug', $slug);
+        return empty($prefix) ? $query->whereNull('prefix')->first() : $query->where('prefix', $prefix)->firstOrFail();
     }
 
     /**
