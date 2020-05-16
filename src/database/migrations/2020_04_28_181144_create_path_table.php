@@ -15,12 +15,12 @@ class CreatePathTable extends Migration
     {
         Schema::create('paths', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->index()->nullable();
-            $table->string('prefix')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->string('callback');
-            $table->json('middleware')->nullable();
-            $table->boolean('is_active');
+            $table->string('slug')->index()->nullable()->comment('Slug for path');
+            $table->string('prefix')->nullable()->comment('Prefix for slug');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('Path prefix');
+            $table->string('callback')->comment('Callback for path');
+            $table->json('middleware')->nullable()->comment('Path middleware');
+            $table->boolean('is_active')->comment('Path activity');
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('paths');
