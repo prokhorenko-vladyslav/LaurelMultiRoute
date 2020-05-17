@@ -4,6 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Package migration
+ *
+ * Class CreatePathTable
+ */
 class CreatePathTable extends Migration
 {
     /**

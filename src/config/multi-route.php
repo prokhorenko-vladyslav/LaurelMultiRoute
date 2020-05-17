@@ -1,4 +1,7 @@
 <?php
+    /**
+     * Package config
+     */
     return [
         /**
          * Default method for routes, if another has not been setted
