@@ -10,7 +10,6 @@ use Laurel\MultiRoute\App\Traits\Cachable;
 use Laurel\MultiRoute\App\Traits\Pathable;
 use Laurel\MultiRoute\App\Traits\Routable;
 use Laurel\MultiRoute\App\Traits\Throwable;
-use PhpParser\Node\Expr\Closure;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
