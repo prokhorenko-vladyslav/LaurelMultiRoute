@@ -54,4 +54,9 @@
          * Need to change, when parent deletes
          */
         'set_null_on_delete' => true,
+
+        /*
+         * Path model
+         */
+        'path_model' => \Laurel\MultiRoute\App\Models\Path::class,
     ];
