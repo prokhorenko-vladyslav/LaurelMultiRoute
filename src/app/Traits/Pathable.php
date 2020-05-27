@@ -21,12 +21,11 @@ trait Pathable
      */
     public static function getPathAttributesFromDB()
     {
-        $path = self::buildPathChain();
-        if (empty($path)) {
-            self::throw404Exception(request()->getRequestUri());
+        [$currentPath, $callback, $path] = self::findSimplePath();
+        if (!$currentPath) {
+            [$currentPath, $callback, $path] = self::findComposedPath();
         }
-        $currentPath = $path[count($path) - 1];
-        $callback = $currentPath->callback;
+
         if ($currentPath->deactivated()) {
             self::throwPathNotActiveException($currentPath->slug);
         }
@@ -34,6 +33,39 @@ trait Pathable
         self::checkCallback($callback);
         self::saveToCache(request()->getRequestUri(), $callback, $path);
         return [$callback, $path];
+    }
+
+    /**
+     * Returns attributes of simple path, if its path attribute equals path parameter in the route
+     *
+     * @return array
+     */
+    public static function findSimplePath()
+    {
+        $uri = request()->route('path');
+        $pathQuery = empty(self::prefix()) ? Path::whereNull('prefix') : Path::where('prefix', self::prefix());
+        $currentPath = $pathQuery->where('path', $uri)->orWhere('path', "/{$uri}")->first();
+        if (empty($currentPath)) {
+            self::throw404Exception(request()->getRequestUri());
+        }
+        return [$currentPath, $currentPath->callback, [$currentPath]];
+    }
+
+    /**
+     * Returns attributes of composed path, which has been found using parent-child relations
+     *
+     * @return array
+     */
+    public static function findComposedPath() : array
+    {
+        $path = self::buildPathChain();
+        if (empty($path)) {
+            self::throw404Exception(request()->getRequestUri());
+        }
+        $currentPath = $path[count($path) - 1];
+        $callback = $currentPath->callback;
+
+        return [$currentPath, $callback, $path];
     }
 
     /**
@@ -217,7 +249,7 @@ trait Pathable
     {
         $uri = "";
         foreach ($pathChain as $path) {
-            $uri .= "/{$path->slug}";
+            $uri .= empty($path->path) ? "/{$path->slug}" : "/{$path->path}";
         }
         return $uri;
     }
