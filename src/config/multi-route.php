@@ -23,7 +23,7 @@
         /**
          * Need to throw 404 error, if route has not been found
          */
-        'process_404' => true,
+        'process_404' => false,
 
         /**
          * Class and method, which will be called, if route has not been found
@@ -33,7 +33,7 @@
         /**
          * Save paths to cache or not
          */
-        'use_cache' => true,
+        'use_cache' => false,
 
         /**
          * Cache storage for saving paths
