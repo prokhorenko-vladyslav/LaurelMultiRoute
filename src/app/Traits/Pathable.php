@@ -249,7 +249,7 @@ trait Pathable
     {
         $uri = "";
         foreach ($pathChain as $path) {
-            $uri .= "/{$path->slug}";
+            $uri .= empty($path->path) ? "/{$path->slug}" : "/{$path->path}";
         }
         return $uri;
     }
