@@ -43,7 +43,7 @@ trait Pathable
     public static function findSimplePath()
     {
         $uri = request()->route('path');
-        $pathQuery = empty(self::prefix()) ? Path::whereNull('prefix') : Path::where('prefix', self::prefix());
+        $pathQuery = empty(self::prefix()) ? config('multi-route.path_model')::whereNull('prefix') : config('multi-route.path_model')::where('prefix', self::prefix());
         $currentPath = $pathQuery->where('path', $uri)->orWhere('path', "/{$uri}")->first();
         if (empty($currentPath)) {
             self::throw404Exception(request()->getRequestUri());
@@ -104,7 +104,8 @@ trait Pathable
     {
         self::checkCallback($callback);
         self::checkSlugUnique($slug, $parent);
-        $path = new Path([
+        $model = config('multi-route.path_model');
+        $path = new $model([
             'slug' => $slug,
             'callback' => $callback
         ]);
@@ -125,7 +126,7 @@ trait Pathable
      */
     public static function checkSlugUnique(string $slug, Path $parent = null)
     {
-        $exists = Path::where('slug', $slug)->where('parent_id', $parent->id ?? null)->exists();
+        $exists = config('multi-route.path_model')::where('slug', $slug)->where('parent_id', $parent->id ?? null)->exists();
         if ($exists) {
             self::throwPathAlreadyExistsException($slug);
         }
@@ -140,7 +141,7 @@ trait Pathable
      */
     public static function getHomepage()
     {
-        return Path::whereNull('slug')->first();
+        return config('multi-route.path_model')::whereNull('slug')->first();
     }
 
     /**
@@ -169,7 +170,7 @@ trait Pathable
         $pathChain = [];
         foreach ($uriParts as $slug) {
             $slug = self::prepareSlug($slug);
-            $path = Path::getBySlug($slug, self::prefix());
+            $path = config('multi-route.path_model')::getBySlug($slug, self::prefix());
             if (!$path) {
                 self::throw404Exception($slug);
             }
@@ -199,7 +200,7 @@ trait Pathable
     {
         $pathChain = [];
         do {
-            $path = Path::getBySlug($slug);
+            $path = config('multi-route.path_model')::getBySlug($slug);
             if (!$path) {
                 self::throwPathNotFoundException($slug);
             }
@@ -224,7 +225,7 @@ trait Pathable
     {
         $pathChain = [];
         do {
-            $path = Path::find($id);
+            $path = config('multi-route.path_model')::find($id);
             if (!$path) {
                 self::throwPathNotFoundException($id);
             }
