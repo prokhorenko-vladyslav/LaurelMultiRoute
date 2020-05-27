@@ -22,7 +22,11 @@ trait Cachable
      */
     protected static function getCacheStorage() : Repository
     {
-        return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')))->tags([ config('multi-route.cache_prefix', '') ]);
+        try {
+            return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')))->tags([ config('multi-route.cache_prefix', '') ]);
+        } catch (\Exception $e) {
+            return Cache::store(config('multi-route.cache_storage', env('CACHE_DRIVER')));
+        }
     }
 
     /**
