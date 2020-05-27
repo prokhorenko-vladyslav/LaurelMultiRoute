@@ -22,6 +22,7 @@ class CreatePathTable extends Migration
             $table->id();
             $table->string('slug')->index()->nullable()->comment('Slug for path');
             $table->string('prefix')->nullable()->comment('Prefix for slug');
+            $table->string('path')->nullable()->comment('Simple url, if need');
             $table->unsignedBigInteger('parent_id')->nullable()->comment('Path parent');
             $table->string('callback')->comment('Callback for path');
             $table->json('middleware')->nullable()->comment('List of path middleware');
